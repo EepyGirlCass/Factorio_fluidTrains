@@ -87,9 +87,6 @@ function public.generateTank(size)
 	proxy_tank.pictures.window_background.filename = "__core__/graphics/empty.png"
 	proxy_tank.pictures.window_background.width = 1
 	proxy_tank.pictures.window_background.height = 1
-	proxy_tank.pictures.window_background.hr_version.filename = "__core__/graphics/empty.png"
-	proxy_tank.pictures.window_background.hr_version.width = 1
-	proxy_tank.pictures.window_background.hr_version.height = 1
 	proxy_tank.pictures.flow_sprite.filename = "__core__/graphics/empty.png"
 	proxy_tank.pictures.flow_sprite.width = 1
 	proxy_tank.pictures.flow_sprite.height = 1
@@ -99,12 +96,6 @@ function public.generateTank(size)
 	proxy_tank.pictures.gas_flow.line_length = 1
 	proxy_tank.pictures.gas_flow.frame_count =1
 	proxy_tank.pictures.gas_flow.animation_speed = 1
-	proxy_tank.pictures.gas_flow.hr_version.filename = "__core__/graphics/empty.png"
-	proxy_tank.pictures.gas_flow.hr_version.width = 1
-	proxy_tank.pictures.gas_flow.hr_version.height = 1
-	proxy_tank.pictures.gas_flow.hr_version.line_length = 1
-	proxy_tank.pictures.gas_flow.hr_version.frame_count =1
-	proxy_tank.pictures.gas_flow.hr_version.animation_speed = 1
 	proxy_tank.vehicle_impact_sound = nil
 	proxy_tank.circuit_wire_connection_points = {}
 	proxy_tank.circuit_connector_sprites = {}

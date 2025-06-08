@@ -38,7 +38,7 @@ local function determineConnectivity(loco, exception, forcedFluidName)
 	if next(legalFluids) == nil then
 		for category, v in pairs(loco.prototype.burner_prototype.fuel_categories) do
 			if v then
-				for fluid, _ in pairs(global.fluid_map[category]) do
+				for fluid, _ in pairs(storage.fluid_map[category]) do
 					legalFluids[fluid] = true
 				end
 			end
@@ -88,22 +88,22 @@ local function determineConnectivity(loco, exception, forcedFluidName)
 end
 
 function public.create_proxy(loco, exception)
---[[ Create proxy_tank for a locomotive and inserting the proxy_tank to global.proxies 
+--[[ Create proxy_tank for a locomotive and inserting the proxy_tank to storage.proxies 
 	if proxy_tank successfully created return 0, else return -1 ]]
 	local uid = loco.unit_number
 	
-	if not global.known_locos[uid] then
-		global.known_locos[uid] = true
-		global.tender_queue[uid % TENDER_UPDATE_TICK+1][uid] = loco
+	if not storage.known_locos[uid] then
+		storage.known_locos[uid] = true
+		storage.tender_queue[uid % TENDER_UPDATE_TICK+1][uid] = loco
 	end
 	
-	local proxy = global.proxies[uid]
+	local proxy = storage.proxies[uid]
 	if not(proxy and proxy.tank and proxy.tank.valid) and math.floor(4 * loco.orientation) == 4 * loco.orientation then
 		local proxy_tank
 		local fluid_amount
 		local tank_type = determineConnectivity(loco, exception)
 		proxy_tank = loco.surface.create_entity{
-			name = global.loco_tank_pair_list[loco.name]..tank_type,
+			name = storage.loco_tank_pair_list[loco.name]..tank_type,
 			position = moveposition(loco.position, ori_to_dir(loco.orientation), {x = 0, y = 0}),
 			force = loco.force,
 			direction = ori_to_dir(loco.orientation)
@@ -125,11 +125,11 @@ function public.create_proxy(loco, exception)
 				proxy_tank.fluidbox[1] = fluid
 			end
 		end
-		global.proxies[uid] = {tank = proxy_tank, last_amount = fluid_amount, tick = game.tick}
+		storage.proxies[uid] = {tank = proxy_tank, last_amount = fluid_amount, tick = game.tick}
 		local update_tick = uid % SLOW_UPDATE_TICK + 1
-		global.update_tick[uid] = update_tick
-		global.low_prio_loco[update_tick][uid] = loco
-		global.high_prio_loco[uid] = loco
+		storage.update_tick[uid] = update_tick
+		storage.low_prio_loco[update_tick][uid] = loco
+		storage.high_prio_loco[uid] = loco
 		return 0
 	end
 	return -1
@@ -142,26 +142,26 @@ function public.destroy_proxy(loco)
 	local uid = loco.unit_number
 	local no_update_ticks = locomotive.update_loco_fuel(loco)
 	if no_update_ticks >= 0 then
-		global.proxies[uid].tank.destroy()
-		global.low_prio_loco[global.update_tick[uid]][uid] = nil
+		storage.proxies[uid].tank.destroy()
+		storage.low_prio_loco[storage.update_tick[uid]][uid] = nil
 	end
-	global.proxies[uid] = nil
-	global.update_tick[uid] = nil
-	global.high_prio_loco[uid] = nil
+	storage.proxies[uid] = nil
+	storage.update_tick[uid] = nil
+	storage.high_prio_loco[uid] = nil
 	return no_update_ticks
 end
 
 function public.refresh_proxy(loco, exception)
-	local proxy = global.proxies[loco.unit_number]
+	local proxy = storage.proxies[loco.unit_number]
 	if proxy and proxy.tank and proxy.tank.valid then
 		local fluid_name = proxy.tank.fluidbox and proxy.tank.fluidbox[1] and proxy.tank.fluidbox[1].name
 		local tank_type = determineConnectivity(loco, exception, fluid_name)
-		if not (proxy.tank.name == global.loco_tank_pair_list[loco.name]..tank_type) then
+		if not (proxy.tank.name == storage.loco_tank_pair_list[loco.name]..tank_type) then
 			local fluid_amount = proxy.tank.fluidbox and proxy.tank.fluidbox[1] and proxy.tank.fluidbox[1].amount
 			local fluid_temp   = proxy.tank.fluidbox and proxy.tank.fluidbox[1] and proxy.tank.fluidbox[1].temperature
 			proxy.tank.destroy()
 			proxy.tank = loco.surface.create_entity{
-				name = global.loco_tank_pair_list[loco.name]..tank_type,
+				name = storage.loco_tank_pair_list[loco.name]..tank_type,
 				position = moveposition(loco.position, ori_to_dir(loco.orientation), {x = 0, y = 0}),
 				force = loco.force,
 				direction = ori_to_dir(loco.orientation)
@@ -183,11 +183,11 @@ function public.refresh_proxy(loco, exception)
 end
 
 function public.forceKillProxy(uid)
-	local proxy = global.proxies[uid]
+	local proxy = storage.proxies[uid]
 	if proxy and proxy.tank and proxy.tank.valid then
 		proxy.tank.destroy()
 	end
-	global.proxies[uid] = nil
+	storage.proxies[uid] = nil
 end
 
 return public

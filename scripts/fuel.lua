@@ -4,18 +4,18 @@ require("stdlib.util")
 local public = {}
 
 function public.is_fake_item(item_stack)
-	return global.item_fluid_map[item_stack.name] and true or false
+	return storage.item_fluid_map[item_stack.name] and true or false
 end
 
 function public.reconstructFluid(locoUid, itemStack)
-	local reverseMap = global.item_fluid_map[itemStack.name]
+	local reverseMap = storage.item_fluid_map[itemStack.name]
 	
 	if reverseMap then
 	
-		local temp = global.temperatures[locoUid]
+		local temp = storage.temperatures[locoUid]
 		if not temp then
 			temp = reverseMap[3]
-			global.temperatures[locoUid] = temp
+			storage.temperatures[locoUid] = temp
 		end
 		local fluidName = reverseMap[1]
 		local amount = itemStack.count * reverseMap[2]
@@ -26,7 +26,7 @@ function public.reconstructFluid(locoUid, itemStack)
 end
 
 function public.determineItemForFluid(fluid, fuel_category)
-	local candidates = global.fluid_map[fuel_category][fluid.name]
+	local candidates = storage.fluid_map[fuel_category][fluid.name]
 	
 	for _, item in pairs(candidates) do
 		if item[2] <= fluid.temperature then

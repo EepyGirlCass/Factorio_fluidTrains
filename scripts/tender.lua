@@ -51,7 +51,7 @@ local function findTenderWagon(loco_uid, train)
 end
 
 local function supportsTenders(loco, tenderSettings)
-	local options = global.loco_options[loco.prototype.name]
+	local options = storage.loco_options[loco.prototype.name]
 	
 	local defaultSettings = tenderSettings.tender
 	

@@ -5,27 +5,27 @@ function public.generateTank(size)
 	local pipe_connections = {}
 
 	if i%64 >= 32 then
-		table.insert(pipe_connections, {position = {-1.5, -0.5}})
+		table.insert(pipe_connections, {direction = defines.direction.west, position = {-0.5, -0.5}})
 	end
 
 	if i%32 >= 16 then
-		table.insert(pipe_connections, {position = {-1.5, 0.5}})
+		table.insert(pipe_connections, {direction = defines.direction.west, position = {-0.5, 0.5}})
 	end
 
 	if i%16 >= 8 then
-		table.insert(pipe_connections, {position = {-1.5, 1.5}})
+		table.insert(pipe_connections, {direction = defines.direction.west, position = {-0.5, 1.5}})
 	end
 
 	if i%8 >= 4 then
-		table.insert(pipe_connections, {position = {1.5, -0.5}})
+		table.insert(pipe_connections, {direction = defines.direction.east, position = {0.5, -0.5}})
 	end
 
 	if i%4 >= 2 then
-		table.insert(pipe_connections, {position = {1.5, 0.5}})
+		table.insert(pipe_connections, {direction = defines.direction.east, position = {0.5, 0.5}})
 	end
 
 	if i%2 >= 1 then
-		table.insert(pipe_connections, {position = {1.5, 1.5}})
+		table.insert(pipe_connections, {direction = defines.direction.east, position = {0.5, 1.5}})
 	end
 
 	local proxy_tank = table.deepcopy(data.raw["storage-tank"]["storage-tank"])
@@ -34,7 +34,7 @@ function public.generateTank(size)
 	proxy_tank.icon_size = 1
 	proxy_tank.icon_mipmaps = 0
 	proxy_tank.flags = {"placeable-neutral", "not-on-map"}
-	proxy_tank.collision_mask = {}
+	--proxy_tank.collision_mask = {}
 	proxy_tank.selectable_in_game = false
 	proxy_tank.minable = nil
 	proxy_tank.next_upgrade = nil  -- Compatibility with other mods altering this value

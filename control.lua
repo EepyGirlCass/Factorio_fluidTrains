@@ -149,7 +149,7 @@ local function ON_DESTROYED(event)
 	if event.buffer then
 		local buffer = event.buffer
 		for name, count in pairs(buffer.get_contents()) do
-			if game.item_prototypes[name].group == "fluidTrains_fake" then
+			if game.prototypes.item[name].group == "fluidTrains_fake" then
 				local amount = buffer.remove({name = name, count = buffer.get_item_count(name)})
 			end
 		end
@@ -255,7 +255,7 @@ local function ON_PLAYER_MAIN_INVENTORY_CHANGED(event)
 	local inventory = player.get_inventory(defines.inventory.character_main)
 	if not inventory then return end
 	for name, count in pairs(inventory.get_contents()) do
-		if game.item_prototypes[name].group == "fluidTrains_fake" then
+		if game.prototypes.item[name].group == "fluidTrains_fake" then
 			local amount = inventory.remove({name = name, count = inventory.get_item_count(name)})
 			if amount and amount > 0 and player.opened and global.loco_tank_pair_list[player.opened.name] then
 				local fake_items
@@ -308,7 +308,7 @@ script.on_event({defines.events.on_player_main_inventory_changed}, ON_PLAYER_MAI
 
 local function addLocomotive(locoName, tankSize, options)
 	-- TODO: verify tank size
-	if (game.entity_prototypes["fluidTrains-proxy-tank-"..tankSize.."-0"]) then
+	if (game.prototypes.entity["fluidTrains-proxy-tank-"..tankSize.."-0"]) then
 		global.loco_tank_pair_list[locoName] = "fluidTrains-proxy-tank-"..tankSize.."-"
 		global.loco_sizes[locoName] = tankSize
 	else
